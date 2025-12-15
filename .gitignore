@@ -1,0 +1,8 @@
+s3/.gitignore.yml
+.terraform/
+terraform-provider-*
+*.tfstate
+*.tfstate.backup
+LICENSE.txt
+s3/iac/terraform/.terraform.lock.hcl
+
