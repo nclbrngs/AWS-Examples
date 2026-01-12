@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+# VPC, SUBNET, IGW, ROUTE TABLE
+
+# Check if the argument is not provided
+if [ -z "$1" ]; then
+  echo "Argument not provided."
+else
+ export VPC_ID="$1"
+fi
+
+if [ -z "$2" ]; then
+  echo "Argument not provided."
+else
+ export SUBNET_ID="$2"
+fi
+
+if [ -z "$3" ]; then
+  echo "Argument not provided."
+else
+ export IGW_ID="$3"
+fi
+
+if [ -z "$4" ]; then
+  echo "Argument not provided."
+else
+ export RT_ID="$4"
+fi
+
+if [ -z "$5" ]; then
+  echo "Argument not provided."
+else
+  export ASSOC_ID="$5"
+fi
+
+# Detach the IGW
+aws ec2 detach-internet-gateway \
+--internet-gateway-id "$IGW_ID" \
+--vpc-id "$VPC_ID"
+
+echo "Detach Internet Gateway for $VPC_ID"
+
+# Delete internet gateway
+aws ec2 delete-internet-gateway \
+--internet-gateway-id "$IGW_ID"
+
+echo "Delete IGW ID: $IGW_ID"
+
+# Disassociate the route table
+aws ec2 disassociate-route-table \
+--association-id "$ASSOC_ID"
+ 
+echo "Disassociate Route Table : $ASSOC_ID"
+
+# Delete a subnet
+aws ec2 delete-subnet --subnet-id "$SUBNET_ID"
+
+echo "Delete Subnet: $SUBNET_ID"
+
+# Delete route table
+#aws ec2 delete-route-table --route-table-id "$RT_ID"
+
+echo "Delete Route Table"
+
+# Delete VPC
+aws ec2 delete-vpc --vpc-id $VPC_ID
+
+echo "Delete VPC"
