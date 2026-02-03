@@ -1,0 +1,9 @@
+aws ec2-instance-connect send-ssh-public-key \
+    --instance-id i-0dcbed85dbe6949b7 \
+    --instance-os-user ec2-user \
+    --availability-zone us-east-1d \
+    --ssh-public-key file://ec2connect.pub
+
+ssh -i ec2connect ec2-user@34.235.147.208
+
+nslookup ssm.us-east-1d.amazonaws.com
