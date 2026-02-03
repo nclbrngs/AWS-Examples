@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  ImageId:
+    Type: String
+    # us-east-1
+  InstanceType:
+    Type: String
+    Default: t3.micro
+  ImageId:
+    Type: AWS::EC2::Image::Id
+    # us-east-1
+    Default: ami-0532be01f26a3de55
+  SubnetId:
+    Type: AWS::EC2::Subnet::Id
+    Default: subnet-05493b191ec29a308
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Default: vpc-076a3dc710e50e397 
+Resources:
+  # EC2 Instance
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref ImageId
+      #SubnetId: !Ref SubnetId
+      #SecurityGroupIds:
+      #  - !GetAtt SG.GroupId
+      NetworkInterfaces:
+        - DeviceIndex: 0
+          SubnetId: !Ref SubnetId
+          AssociatePublicIpAddress: true
+          GroupSet: 
+            - !GetAtt SG.GroupId
+          DeleteOnTermination: true
+      UserData:
+        Fn::Base64: |
+         #!/bin/bash
+         yum update -y
+         yum install -y httpd
+         systemctl start httpd
+         systemctl enable httpd
+         echo "<html><body><h1>Hello from Apache on Amazon Linux 2!</h1></body></html>" > /var/www/html/index.html
+
+  # Security Group
+  SG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow http to client host
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: -1
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
