@@ -1,8 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
-  ImageId:
-    Type: String
-    # us-east-1
   InstanceType:
     Type: String
     Default: t3.micro
@@ -17,31 +14,25 @@ Parameters:
     Type: AWS::EC2::VPC::Id
     Default: vpc-076a3dc710e50e397 
 Resources:
-  # EC2 Instance
-  MyEC2Instance:
-    Type: AWS::EC2::Instance
-    Properties:
-      InstanceType: !Ref InstanceType
-      ImageId: !Ref ImageId
-      #SubnetId: !Ref SubnetId
-      #SecurityGroupIds:
-      #  - !GetAtt SG.GroupId
-      NetworkInterfaces:
-        - DeviceIndex: 0
-          SubnetId: !Ref SubnetId
-          AssociatePublicIpAddress: true
-          GroupSet: 
-            - !GetAtt SG.GroupId
-          DeleteOnTermination: true
-      UserData:
-        Fn::Base64: |
-         #!/bin/bash
-         yum update -y
-         yum install -y httpd
-         systemctl start httpd
-         systemctl enable httpd
-         echo "<html><body><h1>Hello from Apache on Amazon Linux 2!</h1></body></html>" > /var/www/html/index.html
 
+  # Launch Template
+  WebLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        ImageId: !Ref ImageId
+        InstanceType: !Ref InstanceType
+      #SubnetId: !Ref SubnetId
+        SecurityGroupIds: 
+          - !Ref SG
+        UserData:
+          Fn::Base64: |
+            #!/bin/bash
+            yum update -y
+            yum install -y httpd
+            systemctl start httpd
+            systemctl enable httpd
+            echo "<html><body><h1>Hello from Apache on Amazon Linux 2!</h1></body></html>" > /var/www/html/index.html
   # Security Group
   SG:
     Type: AWS::EC2::SecurityGroup
@@ -49,12 +40,27 @@ Resources:
       GroupDescription: Allow http to client host
       VpcId: !Ref VpcId
       SecurityGroupIngress:
-        - IpProtocol: -1
-          FromPort: -1
-          ToPort: -1
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
           CidrIp: 0.0.0.0/0
       SecurityGroupEgress:
         - IpProtocol: -1
           FromPort: -1
           ToPort: -1
           CidrIp: 0.0.0.0/0
+
+  ## Auto Scaling Group
+  WebASG:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      VPCZoneIdentifier: 
+        - !Ref SubnetId
+      LaunchTemplate:
+        LaunchTemplateId: !Ref WebLaunchTemplate
+        Version: !GetAtt WebLaunchTemplate.LatestVersionNumber
+      MinSize: 1
+      MaxSize: 3
+      DesiredCapacity: 1
+      HealthCheckType: EC2
+      HealthCheckGracePeriod: 60
