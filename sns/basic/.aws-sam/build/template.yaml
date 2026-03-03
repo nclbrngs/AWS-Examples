@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SNS Basic
+Resources:
+  SNSTopic:
+    Type: AWS::SNS::Topic
+  Lambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: python3.12
+      PackageType: Zip
+      InlineCode: "import json\ndef handler(event, context):\n    # event['Records'][0]['Sns']['Message']\
+        \ is always a string\n    message_str = event['Records'][0]['Sns']['Message']\n\
+        \    try:\n        m = json.loads(message_str)\n        first_name = m.get('first_name',\
+        \ 'Unknown')\n        last_name = m.get('last_name', 'Unknown')\n        message\
+        \ = f\"Hello {first_name} {last_name}!\"\n        print(message)\n       \
+        \ return {\"message\": message}\n    except json.JSONDecodeError:\n      \
+        \  print(\"Failed to parse message:\", message_str)\n        return {\"message\"\
+        : \"Invalid JSON payload\"}\n"
+      Events:
+        SNSEvent:
+          Type: SNS
+          Properties:
+            Topic:
+              Ref: SNSTopic
