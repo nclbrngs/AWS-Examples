@@ -52,4 +52,4 @@ terraform.rc
 # planout
 
 # Ignore SAM installer zip
-/workspaces/AWS-Examples/sns/basic/sam-installation.zip
+/workspaces/AWS-Examples/sns/basic/sam-installation.zipsns/basic/sam-installation.zip
