@@ -1,0 +1,49 @@
+{
+  "Objects": [
+    {
+      "Key": "files/1.txt"
+    },
+    {
+      "Key": "files/2.txt"
+    },
+    {
+      "Key": "files/3.txt"
+    },
+    {
+      "Key": "files/4.txt"
+    },
+    {
+      "Key": "files/5.txt"
+    },
+    {
+      "Key": "files/6.txt"
+    },
+    {
+      "Key": "files/7.txt"
+    },
+    {
+      "Key": "files/8.txt"
+    },
+    {
+      "Key": "files/9.txt"
+    },
+    {
+      "Key": "files/myfile2_1.txt"
+    },
+    {
+      "Key": "files/myfile2_2.txt"
+    },
+    {
+      "Key": "files/myfile2_3.txt"
+    },
+    {
+      "Key": "files/myfile2_4.txt"
+    },
+    {
+      "Key": "files/myfile2_5.txt"
+    },
+    {
+      "Key": "newfile.txt"
+    }
+  ]
+}

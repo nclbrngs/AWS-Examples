@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+echo "== deploy ec2"
+
+STACK_NAME="aws-asg-ec2-basic"
+
+aws cloudformation deploy \
+--template-file template.yaml \
+--stack-name $STACK_NAME \
+--capabilities CAPABILITY_IAM \
+--no-execute-changeset \
+--region us-east-1

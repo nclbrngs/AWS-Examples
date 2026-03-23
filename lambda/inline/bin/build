@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -e
+
+root_path=$(real.path .)
+template_path="${root_path}/template.yml"
+function_path="${root_path}/function"
+
+echo "== SAM Build..."
+echo "using template: ${template_path}"
+echo "using function at: "${function_path}"
+sam build \   
+    --template-file "${template_path}"
+    --base-dir "${function_path}"

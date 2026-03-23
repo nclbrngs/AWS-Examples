@@ -1,0 +1,14 @@
+Transform: AWS::Serverless-2016-10-31
+Resources:
+ InlineLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+        Handler: index.handler
+        Runtime: python3.14
+        PackageType: Zip
+        InlineCode: |
+            def lambda_handler(event, context):
+            message = 'Hello {} {}!'.format(event['first_name'], event['last_name'])
+            return {
+                'message' : message
+            }
