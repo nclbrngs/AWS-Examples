@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+root_path=$(realpath .)
+echo $root_path
+config_path="$(realpath .)/samconfig.toml"
+echo $config_path
+echo "== SAM Deploy"
+
+sam deploy \
+--template-file "/workspaces/AWS-Examples/lambda/zip_local/template.yml" \
+--stack-name "zip-local-lambda-py" \
+--capabilities "CAPABILITY_IAM" \
+--config-file "$config_path" \
+--resolve-s3
