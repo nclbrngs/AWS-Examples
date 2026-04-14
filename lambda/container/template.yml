@@ -1,0 +1,10 @@
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  InlineLambda:
+    Type: AWS::Serverless::Function
+    Metadata:
+      DockerContext: function
+      Dockerfile: Dockerfile
+    Properties:
+      PackageType: Image

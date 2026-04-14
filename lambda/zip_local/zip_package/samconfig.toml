@@ -3,5 +3,6 @@ version=0.1
 s3_bucket = "my-lambda-artifacts-2468"
 region = "us-east-1"
 
-[default.global.parameters]
+[default.deploy.parameters]
+s3_bucket = "my-lambda-artifacts-2468"
 region = "us-east-1"

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+root_path=$(realpath .)
+echo $root_path
+config_path="$(realpath .)/samconfig.toml"
+echo $config_path
+echo "== SAM Deploy"
+
+sam deploy \
+  --template-file .aws-sam/build/packaged.yaml \
+  --stack-name container-lambda-py \
+  --capabilities CAPABILITY_IAM \
+  --image-repository 378950443697.dkr.ecr.us-east-1.amazonaws.com/python-container-example

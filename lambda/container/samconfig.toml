@@ -1,0 +1,14 @@
+version = 0.1
+
+[default.build.parameters]
+use_container = true
+
+[default.package.parameters]
+s3_bucket = "my-lambda-artifacts-2468"
+region = "us-east-1"
+image_repository = "378950443697.dkr.ecr.us-east-1.amazonaws.com/python-container-example"
+
+[default.deploy.parameters]
+s3_bucket = "my-lambda-artifacts-2468"
+region = "us-east-1"
+image_repository = "378950443697.dkr.ecr.us-east-1.amazonaws.com/python-container-example"
