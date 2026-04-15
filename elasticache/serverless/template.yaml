@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Launch a simple EC2 for use with testing VPCs
+
+Parameters:
+  InstanceType:
+    Type: String
+    Default: t3.micro
+  ImageId:
+    Type: String
+    Default: ami-0ec10929233384c7f
+  SubnetId:
+    Type: String
+    Default: subnet-0230d8b2c73841283
+  VpcId:
+    Type: String
+    Default: vpc-076a3dc710e50e397
+  SecurityGroupId:
+    Type: String
+    Default: sg-06e209e947a236d37
+Resources:
+  # IAM Role for EC2
+  MyEC2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+
+  # Instance Profile
+  EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref MyEC2Role
+
+  # EC2 Instance
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref ImageId
+      #SubnetId: !Ref SubnetId
+      #SecurityGroupIds:
+      #  - !GetAtt SG.GroupId
+      NetworkInterfaces:
+        - DeviceIndex: 0
+          SubnetId: !Ref SubnetId
+          AssociatePublicIpAddress: true
+          GroupSet: 
+            - !Ref SecurityGroupId
+          DeleteOnTermination: true
+
+      UserData:
+        Fn::Base64: |
+         #!/bin/bash
+         sudo snap install redis
+

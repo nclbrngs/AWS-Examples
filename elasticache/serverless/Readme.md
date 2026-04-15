@@ -1,6 +1,6 @@
 # Create Serverless Cache
 aws elasticache create-serverless-cache \
---serverless-cache-name my-cache-nb-2468 \
+--serverless-cache-name my-cache-nb-2460 \
 --engine redis \
 --major-engine-version 7
 
